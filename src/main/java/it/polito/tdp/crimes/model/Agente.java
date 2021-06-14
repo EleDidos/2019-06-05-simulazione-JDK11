@@ -6,8 +6,8 @@ public class Agente {
 	
 	private Integer agenteID;
 	private Distretto distretto;
-	private LocalTime arrivo;
-	private Event e;
+	//private LocalTime arrivo;
+	//private Event e;
 	private boolean free;
 	
 	public Agente(Integer agenteID, Distretto distretto) {
@@ -25,13 +25,13 @@ public class Agente {
 		return distretto;
 	}
 
-	public LocalTime getArrivo() {
+	/*public LocalTime getArrivo() {
 		return arrivo;
 	}
 
 	public Event getE() {
 		return e;
-	}
+	}*/
 
 	public boolean isFree() {
 		return free;
@@ -41,13 +41,13 @@ public class Agente {
 		this.distretto = distretto;
 	}
 
-	public void setArrivo(LocalTime arrivo) {
+	/*public void setArrivo(LocalTime arrivo) {
 		this.arrivo = arrivo;
 	}
 
 	public void setE(Event e) {
 		this.e = e;
-	}
+	}*/
 
 	public void setFree(boolean free) {
 		this.free = free;

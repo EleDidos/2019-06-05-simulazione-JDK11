@@ -85,10 +85,10 @@ public class Model {
 		List <VicinoDistanza> vd = new ArrayList <VicinoDistanza>();
 		
 		for(Distretto di: Graphs.neighborListOf(graph, d)) {
-			if(graph.getEdge(di, d)!=null)
+			//if(graph.getEdge(di, d)!=null)
 				e=graph.getEdge(di, d);
-			else
-				e=graph.getEdge(d, di);
+			/*else
+				e=graph.getEdge(d, di);*/
 			vd.add(new VicinoDistanza(di,graph.getEdgeWeight(e)));
 		}
 		
@@ -100,9 +100,10 @@ public class Model {
 	}
 	
 	
-	public void simula(Integer N) {
+	public Integer simula(Integer N) {
 		sim=new Simulatore();
-		sim.run(N, this.getBestDistretto(),Map <Integer, Distretto> idMap);
+		sim.run(year, dao, N, this.getBestDistretto(),idMap, graph);
+		return sim.getMalGestiti();
 		
 	}
 	
@@ -118,4 +119,5 @@ public class Model {
 		}
 		return best;
 	}
+	
 }

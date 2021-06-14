@@ -1,5 +1,6 @@
 package it.polito.tdp.crimes.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Distretto implements Comparable<Distretto>{
@@ -39,9 +40,7 @@ public class Distretto implements Comparable<Distretto>{
 	public List<Event> getEventi() {
 		return eventi;
 	}
-	public void setEventi(List<Event> eventi) {
-		this.eventi = eventi;
-	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -68,6 +67,7 @@ public class Distretto implements Comparable<Distretto>{
 	public Distretto(Integer iD) {
 		super();
 		ID = iD;
+		eventi= new ArrayList<Event>();
 	}
 	
 	public void addEvent(Event e) {
@@ -79,6 +79,9 @@ public class Distretto implements Comparable<Distretto>{
 		return this.ID-other.ID;
 	}
 	
+	public String toString() {
+		return "Distretto "+ID;
+	}
 	
 
 }
