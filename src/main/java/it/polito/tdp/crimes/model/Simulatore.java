@@ -1,6 +1,7 @@
 package it.polito.tdp.crimes.model;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -31,15 +32,17 @@ public class Simulatore {
 	private Integer year;
 	private Long gestioneIntervento;
 	private double distanzaMIN; //km ????
+	private LocalDate giornata;
 	
-	public void run(Integer year, EventsDao dao, Integer N, Distretto best,Map <Integer, Distretto> idMap,SimpleWeightedGraph <Distretto, DefaultWeightedEdge> graph) {
+	public void run(Integer year, Integer month, Integer day, EventsDao dao, Integer N, Distretto best,Map <Integer, Distretto> idMap,SimpleWeightedGraph <Distretto, DefaultWeightedEdge> graph) {
 		this.N=N;
 		this.year=year;
+		giornata = LocalDate.of(year,month,day);
 		this.dao=dao;
 		this.graph=graph;
 		malGestiti=0;
 		this.best=best;
-		
+		queue=new PriorityQueue<EventoCoda>();
 		this.idMap=idMap;
 		
 		//tutti gli agenti nel distretto migliore della centrale
@@ -49,8 +52,8 @@ public class Simulatore {
 			agenti.add(a);
 		}
 		
-		//riempi la coda di crimini di quell'anno
-		for(Event e: dao.loadEventsYear(year)) {
+		//riempi la coda di crimini di quella giornata
+		for(Event e: dao.loadEventsDay(year,month,day)) {
 			LocalDateTime ldt = e.getReported_date();
 			LocalTime lt = LocalTime.of(ldt.getHour(), ldt.getMinute(), ldt.getSecond());
 			EventoCoda nuovo1 = new EventoCoda(EventType.CRIMINE,lt,e);
@@ -102,7 +105,7 @@ public class Simulatore {
 					malGestiti++;
 				}
 				
-				long tempoDiGestione=seconds+gestioneIntervento;
+				long tempoDiGestione=seconds+gestioneIntervento; //seconds
 				
 				//gestione dell'evento in tempo o no
 				EventoCoda nuovo2 = new EventoCoda(EventType.GESTITO,ec.getTime().plus(tempoDiGestione,ChronoUnit.SECONDS),ec.getEvent());

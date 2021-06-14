@@ -100,9 +100,9 @@ public class Model {
 	}
 	
 	
-	public Integer simula(Integer N) {
+	public Integer simula(Integer N, Integer month, Integer day) {
 		sim=new Simulatore();
-		sim.run(year, dao, N, this.getBestDistretto(),idMap, graph);
+		sim.run(year, month,day,dao, N, this.getBestDistretto(),idMap, graph);
 		return sim.getMalGestiti();
 		
 	}
@@ -110,7 +110,7 @@ public class Model {
 	
 	private Distretto getBestDistretto() {
 		Distretto best=new Distretto(0);
-		Integer minCrimes=300000;
+		Integer minCrimes=Integer.MAX_VALUE;
 		
 		for(Distretto di: idMap.values()) {
 			if(di.getEventi().size()<minCrimes)

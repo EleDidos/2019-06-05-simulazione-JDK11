@@ -49,10 +49,11 @@ public class FXMLController {
     private TextArea txtResult; // Value injected by FXMLLoader
     
     LocalDate ld;
+    Integer year;
 
     @FXML
     void doCreaReteCittadina(ActionEvent event) {
-    	Integer year;
+    	
     	try {
     		year=boxAnno.getValue();
     	}catch(NullPointerException npe) {
@@ -69,6 +70,17 @@ public class FXMLController {
     	//MESE
     	Integer[]mese = {1,2,3,4,5,6,7,8,9,10,11,12};
     	boxMese.getItems().addAll(mese);
+    	//GIORNO
+    	ArrayList <Integer> giorno=new ArrayList<Integer>();
+    	for(int i=1;i<=31;i++)
+			giorno.add(i);
+    	boxGiorno.getItems().addAll(giorno);
+    	
+    	
+    }
+
+    @FXML
+    void doSimula(ActionEvent event) {
     	
     	Integer month;
     	try {
@@ -78,22 +90,6 @@ public class FXMLController {
     		return;
     	}
     	
-    	//GIORNO
-    	ArrayList <Integer> giorno=new ArrayList<Integer>();
-    	if(month==1||month==3||month==5||month==7||month==8||month==10||month==12) {
-    		for(int i=1;i<=31;i++)
-    			giorno.add(i);
-    	}else if(year%4==0 & month==2) {
-    		for(int i=1;i<=29;i++)
-    			giorno.add(i);
-    	}else if(year%4!=0 & month==2) {
-        		for(int i=1;i<=28;i++)
-        			giorno.add(i);
-    	}else {
-    		for(int i=1;i<=30;i++)
-    			giorno.add(i);
-    	}
-    	boxGiorno.getItems().addAll(giorno);
     	Integer day;
     	try {
     		day=boxGiorno.getValue();
@@ -102,12 +98,25 @@ public class FXMLController {
     		return;
     	}
     	
+    	if(year%4==0 & month==2) { //anno bisestile
+    		if(day>29) {
+    			txtResult.setText("Data errata");
+        		return;
+    		}	
+    	}else if(year%4!=0 & month==2) {
+    		if(day>28) {
+    			txtResult.setText("Data errata");
+        		return;
+    		}
+    	}else if(month==4||month==6||month==9||month==11){
+    		if(day>30) {
+    			txtResult.setText("Data errata");
+        		return;
+    		}
+    	}
+    	
     	ld = LocalDate.of(year, month+1, day);
     	
-    }
-
-    @FXML
-    void doSimula(ActionEvent event) {
     	
     	Integer N;
     	
@@ -126,7 +135,7 @@ public class FXMLController {
     		return;
     	}
     	
-    	Integer malGestiti = model.simula(N);
+    	Integer malGestiti = model.simula(N, month,day);
     	txtResult.appendText("Il numero di interventi malgestiti è: "+malGestiti);
     	
 

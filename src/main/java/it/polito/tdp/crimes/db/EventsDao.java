@@ -43,10 +43,10 @@ public class EventsDao {
 		}
 	}
 	
-	public List <Event> loadEventsYear(Integer year){
+	public List <Event> loadEventsDay(Integer year, Integer month, Integer day){
 		String sql = "SELECT * "
 				+ "FROM events "
-				+ "WHERE YEAR(reported_date)=?" ;
+				+ "WHERE YEAR(reported_date)=? and MONTH(reported_date)=? and DAY(reported_date)=?" ;
 		try {
 			Connection conn = DBConnect.getConnection() ;
 
@@ -55,6 +55,8 @@ public class EventsDao {
 			List<Event> list = new ArrayList<Event>() ;
 			
 			st.setInt(1, year);
+			st.setInt(2, month);
+			st.setInt(3, day);
 			ResultSet res = st.executeQuery() ;
 			
 			while(res.next()) {
