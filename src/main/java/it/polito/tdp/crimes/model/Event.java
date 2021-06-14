@@ -2,7 +2,7 @@ package it.polito.tdp.crimes.model;
 
 import java.time.LocalDateTime;
 
-public class Event {
+public class Event implements Comparable<Event>{
 	
 	private Long incident_id;
 	private Integer offense_code;
@@ -156,7 +156,10 @@ public class Event {
 				+ reported_date + ", district_id=" + district_id + "]";
 	}
 	
-	
+	@Override 
+	public int compareTo(Event other) {
+		return this.reported_date.compareTo(other.reported_date);
+	}
 	
 	
 }

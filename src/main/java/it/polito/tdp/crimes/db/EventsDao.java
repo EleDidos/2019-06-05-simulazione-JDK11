@@ -78,12 +78,12 @@ public class EventsDao {
 			}
 			
 			conn.close();
-			return list ;
+			return  ;
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null ;
+			return  ;
 		}
 	}
 	

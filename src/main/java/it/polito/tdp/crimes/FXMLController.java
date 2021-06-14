@@ -5,6 +5,8 @@
 package it.polito.tdp.crimes;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -29,10 +31,10 @@ public class FXMLController {
     private ComboBox<Integer> boxAnno; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxMese"
-    private ComboBox<?> boxMese; // Value injected by FXMLLoader
+    private ComboBox<Integer> boxMese; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxGiorno"
-    private ComboBox<?> boxGiorno; // Value injected by FXMLLoader
+    private ComboBox<Integer> boxGiorno; // Value injected by FXMLLoader
 
     @FXML // fx:id="btnCreaReteCittadina"
     private Button btnCreaReteCittadina; // Value injected by FXMLLoader
@@ -45,6 +47,8 @@ public class FXMLController {
 
     @FXML // fx:id="txtResult"
     private TextArea txtResult; // Value injected by FXMLLoader
+    
+    LocalDate ld;
 
     @FXML
     void doCreaReteCittadina(ActionEvent event) {
@@ -59,11 +63,69 @@ public class FXMLController {
     	model.creaGrafo(year);
     	
     	txtResult.appendText("Caratteristiche del GRAFO:\n#VERTICI = "+model.getNVertici()+"\n#ARCHI = "+model.getNArchi());
-
+    	
+    	txtResult.appendText("\nVICINI:\n"+model.getViciniTOT());
+    	
+    	//MESE
+    	Integer[]mese = {1,2,3,4,5,6,7,8,9,10,11,12};
+    	boxMese.getItems().addAll(mese);
+    	
+    	Integer month;
+    	try {
+    		month=boxMese.getValue();
+    	}catch(NullPointerException npe) {
+    		txtResult.setText("Scegliere un mese");
+    		return;
+    	}
+    	
+    	//GIORNO
+    	ArrayList <Integer> giorno=new ArrayList<Integer>();
+    	if(month==1||month==3||month==5||month==7||month==8||month==10||month==12) {
+    		for(int i=1;i<=31;i++)
+    			giorno.add(i);
+    	}else if(year%4==0 & month==2) {
+    		for(int i=1;i<=29;i++)
+    			giorno.add(i);
+    	}else if(year%4!=0 & month==2) {
+        		for(int i=1;i<=28;i++)
+        			giorno.add(i);
+    	}else {
+    		for(int i=1;i<=30;i++)
+    			giorno.add(i);
+    	}
+    	boxGiorno.getItems().addAll(giorno);
+    	Integer day;
+    	try {
+    		day=boxGiorno.getValue();
+    	}catch(NullPointerException npe) {
+    		txtResult.setText("Scegliere un giorno");
+    		return;
+    	}
+    	
+    	ld = LocalDate.of(year, month+1, day);
+    	
     }
 
     @FXML
     void doSimula(ActionEvent event) {
+    	
+    	Integer N;
+    	
+    	try {
+    		N=Integer.parseInt(txtN.getText());
+    	}catch(NumberFormatException nfe) {
+    		txtResult.setText("Scegliere un numero intero tra 1 e 10");
+    		return;
+    	}
+    	catch(NullPointerException npe) {
+    		txtResult.setText("Scegliere un mese");
+    		return;
+    	}
+    	if(N<1||N>10) {
+    		txtResult.setText("Scegliere un numero intero tra 1 e 10");
+    		return;
+    	}
+    	
 
     }
 

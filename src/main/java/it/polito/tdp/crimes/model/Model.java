@@ -1,6 +1,7 @@
 package it.polito.tdp.crimes.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,10 @@ import java.util.Map;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
+
+import com.javadocmd.simplelatlng.LatLng;
+import com.javadocmd.simplelatlng.LatLngTool;
+import com.javadocmd.simplelatlng.util.LengthUnit;
 
 import it.polito.tdp.crimes.db.EventsDao;
 
@@ -17,7 +22,7 @@ public class Model {
 	private Map <Integer, Distretto> idMap;
 	private EventsDao dao;
 	private Integer year;
-	private List <Distretto> vertici;
+	private Simulatore sim;
 	
 	public Model(){
 		idMap= new HashMap  <Integer, Distretto> ();
@@ -39,11 +44,19 @@ public class Model {
 			d.calcola_avg_lon();
 		}
 		
-		//per ogni coppia vertici trovo distanza centri
-		vertici=new ArrayList <Distretto>(idMap.values());
-		for(int i=0;i<vertici.size()-1;i++) {
-			for(int j=i+1;j<vertici.size();j++) {
-				double distanza = 
+		for(Distretto d1 : this.graph.vertexSet()) {
+			for(Distretto d2 : this.graph.vertexSet()) {
+				if(!d1.equals(d2)) {
+					if(this.graph.getEdge(d1, d2) == null) {
+						
+						Double distanzaMedia = LatLngTool.distance(new LatLng(d1.getAvgLat(),d2.getAvgLat()), 
+																	new LatLng(d1.getAvgLon(),d2.getAvgLon()), 
+																	LengthUnit.KILOMETER);
+						
+						Graphs.addEdgeWithVertices(this.graph, d1, d2, distanzaMedia);
+						
+					}
+				}
 			}
 		}
 		
@@ -56,5 +69,53 @@ public class Model {
 	
 	public Integer getNArchi() {
 		return graph.edgeSet().size();
+	}
+	
+	public String getViciniTOT() {
+		String result="";
+		//aggiungo alla stringa risultato la stringa relativa ai vicini di quel distretto
+		for(Distretto d: graph.vertexSet())
+			result+="Vicini del distretto "+d.getID()+"\n"+this.getVicini(d);
+		return result;
+	}
+	
+	private String getVicini(Distretto d){
+		String vicini="";
+		DefaultWeightedEdge e;
+		List <VicinoDistanza> vd = new ArrayList <VicinoDistanza>();
+		
+		for(Distretto di: Graphs.neighborListOf(graph, d)) {
+			if(graph.getEdge(di, d)!=null)
+				e=graph.getEdge(di, d);
+			else
+				e=graph.getEdge(d, di);
+			vd.add(new VicinoDistanza(di,graph.getEdgeWeight(e)));
+		}
+		
+		Collections.sort(vd);
+		
+		for(VicinoDistanza vdi: vd)
+			vicini+=vdi.getVicino()+" - "+vdi.getDistanza()+"\n";
+		return vicini;
+	}
+	
+	
+	public void simula(Integer N) {
+		sim=new Simulatore();
+		sim.run(N, this.getBestDistretto(),Map <Integer, Distretto> idMap);
+		
+	}
+	
+	
+	private Distretto getBestDistretto() {
+		Distretto best=new Distretto(0);
+		Integer minCrimes=300000;
+		
+		for(Distretto di: idMap.values()) {
+			if(di.getEventi().size()<minCrimes)
+				minCrimes=di.getEventi().size();
+				best=di;
+		}
+		return best;
 	}
 }
