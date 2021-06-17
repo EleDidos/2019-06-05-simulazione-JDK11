@@ -98,7 +98,7 @@ public class Simulatore {
 				//tempo dell'agente di raggiungere il luogo
 				//velocità=60km/h
 				
-				long seconds = (long) (distanzaMIN/(60000/3.6));
+				long seconds = (long) (distanzaMIN/(60/3.6));
 			
 				//evento mal gestito, ci mette troppo tempo ad arrivare sul posto
 				if(seconds/60>=15) {
@@ -136,16 +136,29 @@ public class Simulatore {
 	private Agente scegliAgente(EventoCoda ec) {
 		boolean found=false;
 		Agente scelto=new Agente(null,null);
-		distanzaMIN=Integer.MAX_VALUE;
+		distanzaMIN=Double.MAX_VALUE;
 		Distretto distrettoCrimine = idMap.get(ec.getEvent().getDistrict_id());
 		
 		for(Agente a:agenti) {
 			if(a.isFree()) { //trovo arco che unisce "a" al distretto del crimine per vederne la distanza
 				found=true;
+				
+				if(a.getDistretto().equals(distrettoCrimine)) {
+					distanzaMIN=0.0; //si trova già lì
+					scelto=a;
+					System.out.println("Agente scelto: "+a+"si trova in distretto "+a.getDistretto()+" distante km "+distanzaMIN);
+					break;
+				}
+					
 				DefaultWeightedEdge e= graph.getEdge(a.getDistretto(), distrettoCrimine);
+				
+				if(e==null)
+					System.out.println("non esiste quest'arco");
+				
 				if(graph.getEdgeWeight(e)<distanzaMIN) {
 					distanzaMIN=graph.getEdgeWeight(e);
 					scelto=a;
+					System.out.println("Agente scelto: "+a+"si trova in distretto "+a.getDistretto()+" distante km "+distanzaMIN);
 				}
 			}//if
 				

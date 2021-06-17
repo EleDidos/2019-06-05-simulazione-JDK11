@@ -136,7 +136,7 @@ public class FXMLController {
     	}
     	
     	Integer malGestiti = model.simula(N, month,day);
-    	txtResult.appendText("Il numero di interventi malgestiti è: "+malGestiti);
+    	txtResult.appendText("\nIl numero di interventi malgestiti è: "+malGestiti);
     	
 
     }

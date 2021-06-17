@@ -54,6 +54,11 @@ public class Agente {
 	}
 	
 	
+	public String toString() {
+		return ""+agenteID;
+	}
+	
+	
 	
 	
 
