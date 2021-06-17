@@ -96,9 +96,9 @@ public class Simulatore {
 				}
 				
 				//tempo dell'agente di raggiungere il luogo
-				//velocità=60km/s
+				//velocità=60km/h
 				
-				long seconds = (long) (distanzaMIN/60);
+				long seconds = (long) (distanzaMIN/(60000/3.6));
 			
 				//evento mal gestito, ci mette troppo tempo ad arrivare sul posto
 				if(seconds/60>=15) {

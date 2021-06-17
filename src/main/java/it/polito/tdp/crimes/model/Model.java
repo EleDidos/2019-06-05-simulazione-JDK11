@@ -49,8 +49,8 @@ public class Model {
 				if(!d1.equals(d2)) {
 					if(this.graph.getEdge(d1, d2) == null) {
 						
-						Double distanzaMedia = LatLngTool.distance(new LatLng(d1.getAvgLat(),d2.getAvgLat()), 
-																	new LatLng(d1.getAvgLon(),d2.getAvgLon()), 
+						Double distanzaMedia = LatLngTool.distance(new LatLng(d1.getAvgLat(),d1.getAvgLon()), 
+																	new LatLng(d2.getAvgLat(),d2.getAvgLon()), 
 																	LengthUnit.KILOMETER);
 						
 						Graphs.addEdgeWithVertices(this.graph, d1, d2, distanzaMedia);
