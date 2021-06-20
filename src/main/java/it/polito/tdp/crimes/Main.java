@@ -1,7 +1,7 @@
 package it.polito.tdp.crimes;
 
 /**
- * 1. DISTANZA dei VICINI in km??? 
+ * 
  * @author elena
  *
  */

@@ -47,7 +47,7 @@ public class Model {
 		for(Distretto d1 : this.graph.vertexSet()) {
 			for(Distretto d2 : this.graph.vertexSet()) {
 				if(!d1.equals(d2)) {
-					if(this.graph.getEdge(d1, d2) == null) {
+					if(this.graph.getEdge(d1, d2) == null) { //se non ho ancora messo quell'arco
 						
 						Double distanzaMedia = LatLngTool.distance(new LatLng(d1.getAvgLat(),d1.getAvgLon()), 
 																	new LatLng(d2.getAvgLat(),d2.getAvgLon()), 
